@@ -88,7 +88,7 @@ app.get("/notes", function (req, res) {
 });
 
 function getDataFromFile() {
-
+    let noteArrayStr = [];
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             throw err;
@@ -129,9 +129,9 @@ function getDataFromFile() {
 
         // Using a RegEx Pattern to remove spaces from newCharacter
         // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-        // const newId = noteArrayStr.length + 1;
-        newNote.routeName = newNote.title.replace(/\s+/g, "").toLowerCase();
-        // newNote.routeName = newId.toString();
+        const newId = noteArrayStr.length;
+        // newNote.routeName = newNote.title.replace(/\s+/g, "").toLowerCase();
+        newNote.routeName = newId.toString();
 
         console.log(newNote);
         noteArrayStr.push(newNote);
@@ -149,11 +149,24 @@ function getDataFromFile() {
     app.delete("/api/notes/:character", function (request, response) {
         var chosen = request.params.character;
         console.log(chosen);
-
+        let newId = 0;
         for (var i = 0; i < noteArrayStr.length; i++) {
             if (chosen === noteArrayStr[i].routeName) {
                 noteArrayStr.splice(i, 1);
+                noteArrayStr.forEach((element, i) => {
+                    element.routeName = i.toString();
+                })
+                // console.log(`Deleting note with routeName ${chosen}`);
+                // noteArrayStr = noteArrayStr.filter(currNote => {
+                //     return currNote.routeName != chosen;
+                // })
+                // for (currNote of noteArrayStr) {
+                //     currNote.routeName = newId.toString();
+                //     newId++;
+                // }
                 console.log(noteArrayStr);
+
+
                 const newData = JSON.stringify(noteArrayStr, null, 4)
 
                 fs.writeFile("./db/db.json", newData, function (err) {

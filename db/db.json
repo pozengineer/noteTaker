@@ -1,17 +1,17 @@
 [
     {
-        "title": "Test Title",
-        "text": "Test text",
-        "routeName": "testtitle"
-    },
-    {
-        "title": "Come on",
-        "text": "and here we go",
-        "routeName": "comeon"
+        "title": "First note",
+        "text": "Should be working",
+        "routeName": "0"
     },
     {
         "title": "Awesome",
-        "text": "A day well spend figuring out the server",
-        "routeName": "awesome"
+        "text": "Hard day's work paying off",
+        "routeName": "1"
+    },
+    {
+        "title": "Pratigya",
+        "text": "Pick kids up from school",
+        "routeName": "2"
     }
 ]
