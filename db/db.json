@@ -2,16 +2,16 @@
     {
         "title": "Test Title",
         "text": "Test text",
-        "routeName": "1"
+        "routeName": "testtitle"
     },
     {
         "title": "Come on",
-        "text": "And here we go",
-        "routeName": "2"
+        "text": "and here we go",
+        "routeName": "comeon"
     },
     {
-        "title": "Yeah Baby",
-        "text": "Pure Awsomeness",
-        "routeName": "3"
+        "title": "Awesome",
+        "text": "A day well spend figuring out the server",
+        "routeName": "awesome"
     }
 ]

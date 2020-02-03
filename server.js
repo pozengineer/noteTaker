@@ -10,7 +10,7 @@ const stringify = require("json-stringify-safe");
 // =============================================================
 var app = express(handleRequest);
 app.use(express.static(path.join(__dirname, '/public')));
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -129,9 +129,9 @@ function getDataFromFile() {
 
         // Using a RegEx Pattern to remove spaces from newCharacter
         // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-        const newId = noteArrayStr.length + 1;
-        // newNote.routeName = newNote.title.replace(/\s+/g, "").toLowerCase();
-        newNote.routeName = newId.toString();
+        // const newId = noteArrayStr.length + 1;
+        newNote.routeName = newNote.title.replace(/\s+/g, "").toLowerCase();
+        // newNote.routeName = newId.toString();
 
         console.log(newNote);
         noteArrayStr.push(newNote);
