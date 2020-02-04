@@ -1,17 +1,32 @@
 [
     {
         "title": "First note",
-        "text": "Should be working",
+        "text": "Should be working sort of with editing",
         "routeName": "0"
     },
     {
         "title": "Awesome",
-        "text": "Hard day's work paying off",
+        "text": "Hard day's work paying off\nyeah baby",
         "routeName": "1"
     },
     {
-        "title": "Pratigya",
-        "text": "Pick kids up from school",
+        "title": "Success",
+        "text": "Note taker is functioning as it should",
         "routeName": "2"
+    },
+    {
+        "title": "Duplicate",
+        "text": "duplicate test",
+        "routeName": "3"
+    },
+    {
+        "title": "duplicate01",
+        "text": "not a double",
+        "routeName": "4"
+    },
+    {
+        "title": "Better",
+        "text": "No duplicate titles",
+        "routeName": "5"
     }
 ]

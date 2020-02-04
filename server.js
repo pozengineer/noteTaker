@@ -16,7 +16,7 @@ var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(express.static(__dirname + '/public'));
-app.use(express.static(path.join(__dirname, '/public')));
+// app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/db')));
 
 // Create a function which handles incoming requests and sends responses
@@ -109,7 +109,6 @@ function getDataFromFile() {
     // Displays a single note, or returns false
     app.get("/api/notes/:character", function (request, response) {
         var chosen = request.params.character;
-
         console.log(chosen);
 
         for (var i = 0; i < noteArrayStr.length; i++) {
@@ -119,6 +118,32 @@ function getDataFromFile() {
         }
         return response.json(false);
     });
+
+    // Edits a single note, or returns false
+    app.post("/api/notes/:character", function (request, response) {
+        var chosen = request.params.character;
+        console.log(chosen);
+
+        var updateNote = request.body.text;
+        console.log(updateNote);
+
+        for (var i = 0; i < noteArrayStr.length; i++) {
+            if (chosen === noteArrayStr[i].routeName) {
+                noteArrayStr[i].text = updateNote;
+                console.log(noteArrayStr);
+                const newData = JSON.stringify(noteArrayStr, null, 4)
+
+                fs.writeFile("./db/db.json", newData, function (err) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                });
+                return response.json(noteArrayStr);
+            }
+        }
+        return response.json(false);
+    });
+
 
     // Create new note - takes in JSON input
     app.post("/api/notes", function (request, response) {
