@@ -3,6 +3,7 @@ $(document).ready(function() {
     var $noteText = $(".note-textarea");
     var $saveNoteBtn = $(".save-note");
     var $newNoteBtn = $(".new-note");
+    // var $updateBtn = $(".update-note");
     var $noteList = $(".list-container .list-group");
 
     // activeNote is used to keep track of the note in the textarea
@@ -75,7 +76,7 @@ $(document).ready(function() {
 
         if (activeNote.routeName) {
             $noteTitle.attr("readonly", true);
-            $noteText.attr("readonly", false);
+            $noteText.attr("readonly", true);
             $noteTitle.val(activeNote.title);
             $noteText.val(activeNote.text);
         } else {
@@ -94,6 +95,22 @@ $(document).ready(function() {
         $noteText.val();
     }
 
+    var renderEditNote = function(a, b) {
+        $saveNoteBtn.hide();
+        $noteTitle.attr("readonly", true);
+        $noteText.attr("readonly", false);
+        $noteTitle.val(`${a}`);
+        $noteText.val(`${b}`);
+    }
+
+    var renderUpdateNote = function(a) {
+        $saveNoteBtn.hide();
+        $noteTitle.attr("readonly", true);
+        $noteText.attr("readonly", true);
+        $noteTitle.val(`${a}`);
+        $noteText.val();
+    }
+
     // Get the note data from the inputs, save it to the db and update the view
     var handleNoteSave = function () {
         return getNotes().then(function (data) {
@@ -102,7 +119,7 @@ $(document).ready(function() {
                 title: $noteTitle.val(),
                 text: $noteText.val()
             };
-            let index = search(newNote.title, data)
+            let index = search(newNote.title, data);
         
             if (index) {
                 alert('note title already exist, chose another title!');
@@ -124,8 +141,32 @@ $(document).ready(function() {
             }
         }
     }
+    // Edit the selected note
+    var handleNoteEdit = function (event) {
+        // prevents the click listener for the list from being called when the button inside of it is clicked
+        // event.preventDefault(event)
+        event.stopPropagation();
+        console.log('Edit button clicked');    
+        var activeNote = $(this)
+            .parent(".list-group-item")
+            .data();
+        var indexSelect = $(this).attr('dataIndex').trim()
+        console.log(activeNote);
+        // console.log(updateNote);
+        console.log(indexSelect);
+        console.log(activeNote.routeName);
 
-    // Update the clicked note
+        if (indexSelect === activeNote.routeName) {
+            activenote = {
+                title: activeNote.title,
+                text: activeNote.text
+            };
+        }
+        // $updateBtn.show();
+        getAndRenderNotes();
+        renderEditNote(activeNote.title, activeNote.text);
+    };
+    // Update the selected note
     var handleNoteUpdate = function (event) {
         // prevents the click listener for the list from being called when the button inside of it is clicked
         event.stopPropagation();
@@ -141,13 +182,15 @@ $(document).ready(function() {
 
         if (indexSelect === note.routeName) {
             note = {
-                text: $noteText.val()
+                title: note.title,
+                text: $noteText.val(),
+                // routeName: indexSelect
             };
         }
 
         updateNote(indexSelect, note).then(function () {
             getAndRenderNotes();
-            // renderActiveNote();
+            renderUpdateNote(note.title);
         });
     };
 
@@ -214,17 +257,25 @@ $(document).ready(function() {
             var $li = $("<li class='list-group-item'>").data(note);
             $li.attr('dataIndex', note.routeName);
             var $span = $("<span>").text(note.title);
+            var $editBtn = $(
+                "<i class='fas fa-edit float-right text-danger edit-note'>"
+                // "<i class='far fa-edit float-right text-danger update-note'>"
+            );
+            $editBtn.attr('dataIndex', note.routeName);
+
             var $updateBtn = $(
                 "<i class='material-icons float-right text-danger update-note'>save</i>"
+                // "<i class='material-icons float-right text-danger update-note' style='display: none'>save</i>"
                 // "<i class='far fa-edit float-right text-danger update-note'>"
             );
             $updateBtn.attr('dataIndex', note.routeName);
+            $updateBtn.attr('id', note.routeName);
 
             var $delBtn = $(
                 "<i class='fas fa-trash-alt float-right text-danger delete-note'>"
             );
             $delBtn.attr('dataIndex', note.routeName);
-            $li.append($span, $delBtn, $updateBtn);
+            $li.append($span, $delBtn, $updateBtn, $editBtn);
             noteListItems.push($li);
         }
 
@@ -243,6 +294,8 @@ $(document).ready(function() {
     $newNoteBtn.on("click", handleNewNoteView);
     $noteList.on("click", ".delete-note", handleNoteDelete);
     $noteList.on("click", ".update-note", handleNoteUpdate);
+    // $updateBtn.on("click", handleNoteUpdate);
+    $noteList.on("click", ".edit-note", handleNoteEdit);
     $noteTitle.on("keyup", handleRenderSaveBtn);
     $noteText.on("keyup", handleRenderSaveBtn);
 

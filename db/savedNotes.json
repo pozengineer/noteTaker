@@ -5,13 +5,13 @@
         "routeName": "0"
     },
     {
-        "title": "Awesome",
-        "text": "Pure Awesomeness",
+        "title": "Come on",
+        "text": "And here we go",
         "routeName": "1"
     },
     {
-        "title": "Success",
-        "text": "Application functioning as code intended",
+        "title": "Awesome",
+        "text": "Pure Awesomeness",
         "routeName": "2"
     },
     {
@@ -25,13 +25,8 @@
         "routeName": "4"
     },
     {
-        "title": "Come on",
-        "text": "And here we go",
+        "title": "Success",
+        "text": "Application functioning as code intended",
         "routeName": "5"
-    },
-    {
-        "title": "Success App 2.0",
-        "text": "Application functioning as code intended version 2.0",
-        "routeName": "6"
     }
 ]

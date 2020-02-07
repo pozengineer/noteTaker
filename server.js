@@ -3,6 +3,7 @@
 var express = require("express");
 var path = require("path");
 const fs = require("fs");
+const jQuery = require('jquery');
 const util = require("util");
 const stringify = require("json-stringify-safe");
 
@@ -88,125 +89,172 @@ app.get("/notes", function (req, res) {
 });
 
 function getDataFromFile() {
-    let noteArrayStr = [];
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
-        if (err) {
-            throw err;
-        }
-        noteArrayStr = JSON.parse(data);
-        console.log(noteArrayStr);
-    });
-
+    readFile();
     // Displays all notes
     app.get("/api/notes", function (request, response) {
-        // console.log(noteArrayStr[0].routeName);
-        noteArrayStr.forEach(element => {
-            // console.log(element.routeName);
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                throw err;
+            }
+            const noteArrayStr = JSON.parse(data);
+            // console.log(noteArrayStr);
+            // console.log(noteArrayStr[0].routeName);
+            noteArrayStr.forEach(element => {
+                // console.log(element.routeName);
+            })
+            return response.json(noteArrayStr);
         })
-        return response.json(noteArrayStr);
     });
-
     // Displays a single note, or returns false
     app.get("/api/notes/:character", function (request, response) {
         var chosen = request.params.character;
         console.log(chosen);
-
-        for (var i = 0; i < noteArrayStr.length; i++) {
-            if (chosen === noteArrayStr[i].routeName) {
-                return response.json(noteArrayStr[i]);
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                throw err;
             }
-        }
-        return response.json(false);
+            const noteArrayStr = JSON.parse(data);
+            console.log(noteArrayStr[0].routeName);
+            for (var i = 0; i < noteArrayStr.length; i++) {
+                if (chosen === noteArrayStr[i].routeName) {
+                    return response.json(noteArrayStr[i]);
+                }
+            }
+            return response.json(false);
+        })
     });
-
     // Edits a single note, or returns false
     app.post("/api/notes/:character", function (request, response) {
         var chosen = request.params.character;
         console.log(chosen);
-
-        var updateNote = request.body.text;
+        var updateNote = request.body;
+        updateNote.routeName = chosen;
         console.log(updateNote);
-
-        for (var i = 0; i < noteArrayStr.length; i++) {
-            if (chosen === noteArrayStr[i].routeName) {
-                noteArrayStr[i].text = updateNote;
-                console.log(noteArrayStr);
-                const newData = JSON.stringify(noteArrayStr, null, 4)
-
-                fs.writeFile("./db/db.json", newData, function (err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-                return response.json(noteArrayStr);
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                throw err;
             }
-        }
-        return response.json(false);
+            const noteArrayStr = JSON.parse(data);
+            for (var i = 0; i < noteArrayStr.length; i++) {
+                if (chosen === noteArrayStr[i].routeName) {
+                    noteArrayStr[i] = updateNote;
+                    // console.log(noteArrayStr);
+                    const newData = JSON.stringify(noteArrayStr, null, 4)
+
+                    fs.writeFile("./db/db.json", newData, function (err) {
+                        if (err) {
+                            return console.log(err);
+                        }
+                    });
+                    return response.json(newData);
+                }
+            }
+            return response.json(false);
+        });
     });
-
-
     // Create new note - takes in JSON input
     app.post("/api/notes", function (request, response) {
-        // console.log(noteArrayStr);
-        // req.body hosts is equal to the JSON post sent from the user
-        // This works because of our body parsing middleware
-        var newNote = request.body;
-
-        // Using a RegEx Pattern to remove spaces from newCharacter
-        // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
-        const newId = noteArrayStr.length;
-        // newNote.routeName = newNote.title.replace(/\s+/g, "").toLowerCase();
-        newNote.routeName = newId.toString();
-
-        console.log(newNote);
-        noteArrayStr.push(newNote);
-        response.json(newNote);
-        console.log(noteArrayStr);
-        const newData = JSON.stringify(noteArrayStr, null, 4)
-
-        fs.writeFile("./db/db.json", newData, function (err) {
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
             if (err) {
-                return console.log(err);
+                throw err;
             }
+            const noteArrayStr = JSON.parse(data);
+            // console.log(noteArrayStr);
+            // console.log(noteArrayStr);
+            // req.body hosts is equal to the JSON post sent from the user
+            // This works because of our body parsing middleware
+            var newNote = request.body;
+
+            // Using a RegEx Pattern to remove spaces from newCharacter
+            // You can read more about RegEx Patterns later https://www.regexbuddy.com/regex.html
+            const newId = noteArrayStr.length;
+            // newNote.routeName = newNote.title.replace(/\s+/g, "").toLowerCase();
+            newNote.routeName = newId.toString();
+
+            // console.log(newNote);
+            noteArrayStr.push(newNote);
+            response.json(newNote);
+            console.log(noteArrayStr);
+            const newData = JSON.stringify(noteArrayStr, null, 4)
+
+            fs.writeFile("./db/db.json", newData, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
         });
     });
     // Delete note from array
     app.delete("/api/notes/:character", function (request, response) {
         var chosen = request.params.character;
         console.log(chosen);
-        let newId = 0;
-        for (var i = 0; i < noteArrayStr.length; i++) {
-            if (chosen === noteArrayStr[i].routeName) {
-                noteArrayStr.splice(i, 1);
-                noteArrayStr.forEach((element, i) => {
-                    element.routeName = i.toString();
-                })
-                // console.log(`Deleting note with routeName ${chosen}`);
-                // noteArrayStr = noteArrayStr.filter(currNote => {
-                //     return currNote.routeName != chosen;
-                // })
-                // for (currNote of noteArrayStr) {
-                //     currNote.routeName = newId.toString();
-                //     newId++;
-                // }
-                console.log(noteArrayStr);
+        const newData = [];
+        // const newRouteName = 0;
+        // console.log(`Deleting note with routeName ${chosen}`);
 
-
-                const newData = JSON.stringify(noteArrayStr, null, 4)
-
-                fs.writeFile("./db/db.json", newData, function (err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                });
-                return response.json(noteArrayStr);
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                throw err;
             }
-        }
-        return response.json(false);
+            const noteArrayStr = JSON.parse(data);
+            // console.log(noteArrayStr);
+            for (var i = 0; i < noteArrayStr.length; i++) {
+                if (chosen !== noteArrayStr[i].routeName) {
+                    // noteArrayStr.splice(i, 1);
+                    let currentTask = noteArrayStr[i];
+                    console.log(`Adding ${currentTask.routeName}`);
+                    newData.push(currentTask);
+                }
+            }
+            console.log(`newData ${newData}`)
+            newData.forEach((element, i) => {
+                element.routeName = i.toString();
+            })
+            // for (element of noteArrayStr) {
+            //     element.routeName = newIRouteName.toString();
+            //     newRoutName++;
+            // }
+            console.log(newData);
+    
+            const newDataArr = JSON.stringify(newData, null, 4)
+    
+            fs.writeFile("./db/db.json", newDataArr, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+            return response.json(newDataArr);
+            // noteArrayStr = noteArrayStr.filter(element => {
+            //     return element.routeName !== chosen;
+            // })
+        });
     });
 }
 
 getDataFromFile();
+
+function readFile() {
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            throw err;
+        }
+        else if (!data) {
+            console.log('No array in saveFile please create new array!');
+            const noteArray = [];
+            const newDataArr = JSON.stringify(noteArray, null, 4)
+    
+            fs.writeFile("./db/db.json", newDataArr, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+        }
+        else {
+        const noteArrayStr = JSON.parse(data);
+        console.log(noteArrayStr);
+        }
+    });
+}
 
 // Starts the server to begin listening
 // =============================================================
