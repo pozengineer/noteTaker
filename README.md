@@ -2,44 +2,40 @@
 
 Summary
 
-The web application is a template engine that enables the user to build a team of employees
-and displays a dataset depending on the chosen role of the employee. In this application the
-team can consist of:
-- Manager
-- Engineer
-- Intern
-The user will be asked a set of questions determining the number of employees in the team and
-how many of each role will be allocated to the team. The application uses validation methods to
-ensure that the user inputs acceptable data. For example, providing a valid email address. The
-answers will then be used to create new employees. The application uses classes and subclasses
-in order to create new employees and push them to their respective role arrays. Once the user
-has completed inputting the data, the application takes the data and creates cards for each
-employee which is inserted into a template html file. The user can then open the file in the
-browser displaying their team. 
+The web application is a noteTaker application that enables the user to create a list of saved
+notes each with a title and text. Once the notes list has been generated, the user has the
+options to:
+- Create and save a new note
+- Delete an unwanted note
+The application uses a server to retrieve and send data across various files which are then used
+the process the data in order to display the created notes to the user. On the user interface side
+there are a few additional features added to the application including:
+- Creating an empty array if there is no data in the save file
+- Editing an existing note
+- Not duplicating an existing note title
 
-The application uses jest to test whether the classes of the employees have been created correctly.
-Once the application has passed all tests, the developer can continue to develop their code knowing
-that it should run as intended. The following npm's and methods where used in the development of
-this application:
+The following npm's and methods where used in the development of this application:
 - fs
-- open
-- inquirer
-- node-html-parser
-- module.exports
-- debuggex
+- express
+- path
+- jquery
+- util
 - .gitignore
+- get
+- post
+- delete
+- ajax
 
 Getting Started
 
-Can watch the application in use by viewing the videoApp
+This documentation will assist you in viewing this project. To view the project either open
+the url of the deployed application with the following address in any browser:
+
+https://lit-cliffs-40463.herokuapp.com/
 
 Download and clone the repository from GitHub using the following command:
 
-git clone https://github.com/pozengineer/templateEngine.git
-
-In the terminal type in the command
-npm run test: To run jest in order to test the object classes
-node app.js: To run the application
+git clone https://github.com/pozengineer/noteTaker.git
 
 This application was built using:
 - HTML: HyperText Markup Language that allows the developer to describe pages
@@ -49,6 +45,8 @@ This application was built using:
   allows two applications to talk to each other.
 - Node.js: An open-source, cross-platform, JavaScript runtime environment that
   executes JavaScript code outside of a browser.
+- Express.js: An open source web application framework for Node.js
+- Heroku: Is a platform as a service (PaaS) that enables developers to build, run,
+  and operate applications in the cloud
 
-![screenShot](assets/images/templateEngine01.jpg)
-![videoApp](assets/video/templateEngine01.gif)
+![noteTaker screenShot](public/assets/images/noteTaker01.jpg)

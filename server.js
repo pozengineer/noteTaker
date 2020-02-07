@@ -248,6 +248,7 @@ function readFile() {
                     return console.log(err);
                 }
             });
+            console.log(newDataArr);
         }
         else {
         const noteArrayStr = JSON.parse(data);
